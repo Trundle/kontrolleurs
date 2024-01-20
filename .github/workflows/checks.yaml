@@ -1,0 +1,41 @@
+name: Run checks
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: 'Build'
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: 'Checkout source'
+        uses: actions/checkout@v4
+      - name: 'Install Nix Flakes'
+        uses: cachix/install-nix-action@v25
+      - name: 'Build default package'
+        run: nix build -L .
+
+  check:
+    name: 'Check'
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: 'Checkout source'
+        uses: actions/checkout@v4
+      - name: 'Install Nix Flakes'
+        uses: cachix/install-nix-action@v25
+      - name: 'Run all checks'
+        run: nix flake check -L .

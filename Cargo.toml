@@ -1,0 +1,13 @@
+[package]
+name = "kontrolleurs"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+libc = "0.2"
+regex = "1"
+signal-hook = "0"
+termion = "3"
+termwiz = { git = "https://github.com/wez/wezterm.git", rev = "05eadb7cbbf26ae073f9555e587a040c82b30928" }
