@@ -140,8 +140,12 @@ impl<I: Iterator<Item = String>, W: Write + AsFd> Prompt<I, W> {
 
     pub fn handle_key_press(&mut self, key: Key) -> PromptResult {
         match key {
-            Key::Esc | Key::Ctrl('c' | 'g') => PromptResult::Quit,
+            Key::Esc | Key::Ctrl('c' | 'g') => {
+                self.clear();
+                PromptResult::Quit
+            }
             Key::Char('\n') | Key::Left | Key::Right | Key::Home | Key::End => {
+                self.clear();
                 let execute = key == Key::Char('\n');
                 if let Some(ref entry) = self.current_entry {
                     let cursor = self
@@ -192,18 +196,9 @@ impl<I: Iterator<Item = String>, W: Write + AsFd> Prompt<I, W> {
     }
 
     pub fn redraw(&mut self) {
+        self.clear();
         let prompt = self.prompt();
-        let _ = write!(
-            self.stdout,
-            "{}\r{}{}",
-            if self.current_input_height > 1 {
-                termion::cursor::Up((self.current_input_height - 1).try_into().unwrap()).to_string()
-            } else {
-                String::new()
-            },
-            prompt,
-            termion::clear::AfterCursor
-        );
+        let _ = write!(self.stdout, "{prompt}");
         self.current_input_height =
             unicode_column_width(&prompt, None).div_ceil(self.terminal_size.0.into());
         if let Some(ref entry) = self.current_entry {
@@ -224,6 +219,19 @@ impl<I: Iterator<Item = String>, W: Write + AsFd> Prompt<I, W> {
             );
         }
         let _ = self.stdout.flush();
+    }
+
+    fn clear(&mut self) {
+        let _ = write!(
+            self.stdout,
+            "\r{}{}",
+            if self.current_input_height > 1 {
+                termion::cursor::Up((self.current_input_height - 1).try_into().unwrap()).to_string()
+            } else {
+                String::new()
+            },
+            termion::clear::AfterCursor
+        );
     }
 
     fn print_line(line: &str, highlight: &Regex, stdout: &mut RawTerminal<W>) {
