@@ -5,12 +5,12 @@
     url = "github:ipetkov/crane";
     inputs.nixpkgs.follows = "nixpkgs";
   };
-  inputs.pre-commit-hooks = {
-    url = "github:cachix/pre-commit-hooks.nix";
+  inputs.git-hooks = {
+    url = "github:cachix/git-hooks.nix";
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, crane, pre-commit-hooks }:
+  outputs = { self, nixpkgs, crane, git-hooks }:
     let
       defaultSystems = [
         "aarch64-linux"
@@ -80,7 +80,7 @@
             ];
           };
 
-          checks.actionlint = pre-commit-hooks.lib.${pkgs.system}.run {
+          checks.actionlint = git-hooks.lib.${pkgs.system}.run {
             src = lib.sourceFilesBySuffices self [ ".yml" ".yaml" ];
             hooks = {
               actionlint.enable = true;
@@ -94,7 +94,7 @@
             doInstallCargoArtifacts = false;
           };
 
-          checks.nix = pre-commit-hooks.lib.${pkgs.system}.run {
+          checks.nix = git-hooks.lib.${pkgs.system}.run {
             src = lib.sourceFilesBySuffices self [ ".nix" ];
             hooks = {
               nixpkgs-fmt.enable = true;
