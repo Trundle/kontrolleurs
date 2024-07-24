@@ -10,4 +10,4 @@ libc = "0.2"
 regex = "1"
 signal-hook = "0"
 termion = "3"
-termwiz = { git = "https://github.com/wez/wezterm.git", rev = "05eadb7cbbf26ae073f9555e587a040c82b30928" }
+termwiz = { git = "https://github.com/wez/wezterm.git", rev = "7e8fdc118d2d7ceb51c720a966090f6cb65089b7" }
