@@ -34,8 +34,8 @@
     eachDefaultSystem
       (system:
         let
-          craneLib = crane.lib.${system};
           pkgs = nixpkgs.legacyPackages.${system};
+          craneLib = crane.mkLib pkgs;
           lib = pkgs.lib;
           version = "0.1.0";
         in
