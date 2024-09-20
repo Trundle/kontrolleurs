@@ -1,10 +1,7 @@
 {
   description = "Readline-like ctrl-r for fish";
 
-  inputs.crane = {
-    url = "github:ipetkov/crane";
-    inputs.nixpkgs.follows = "nixpkgs";
-  };
+  inputs.crane.url = "github:ipetkov/crane";
   inputs.git-hooks = {
     url = "github:cachix/git-hooks.nix";
     inputs.nixpkgs.follows = "nixpkgs";
@@ -63,7 +60,7 @@
 
             patchPhase = ''
               substituteInPlace functions/_kontrolleurs_ctrl_r.fish \
-                --replace '| kontrolleurs |' '| ${self.packages.${system}.kontrolleurs}/bin/kontrolleurs |'
+                --replace-fail '| kontrolleurs |' '| ${self.packages.${system}.kontrolleurs}/bin/kontrolleurs |'
             '';
           };
 
