@@ -92,14 +92,14 @@
             ];
           };
 
-          checks.actionlint = git-hooks.lib.${pkgs.system}.run {
+          checks.actionlint = git-hooks.lib.${system}.run {
             src = lib.sourceFilesBySuffices self [ ".yml" ".yaml" ];
             hooks = {
               actionlint.enable = true;
             };
           };
 
-          checks.nix = git-hooks.lib.${pkgs.system}.run {
+          checks.nix = git-hooks.lib.${system}.run {
             src = lib.sourceFilesBySuffices self [ ".nix" ];
             hooks = {
               nixpkgs-fmt.enable = true;
@@ -107,14 +107,14 @@
             };
           };
 
-          checks.rustfmt = git-hooks.lib.${pkgs.system}.run {
-            inherit (self.packages.${pkgs.system}.kontrolleurs) src;
+          checks.rustfmt = git-hooks.lib.${system}.run {
+            inherit (self.packages.${system}.kontrolleurs) src;
             hooks.rustfmt.enable = true;
           };
         }) // {
       overlays.default = final: _prev: {
-        kontrolleurs = self.packages.${final.system}.kontrolleurs;
-        kontrolleurs-fish = self.packages.${final.system}.kontrolleurs-fish;
+        kontrolleurs = self.packages.${final.stdenv.hostPlatform.system}.kontrolleurs;
+        kontrolleurs-fish = self.packages.${final.stdenv.hostPlatform.system}.kontrolleurs-fish;
       };
     };
 }
