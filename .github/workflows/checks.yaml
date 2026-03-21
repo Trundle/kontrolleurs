@@ -18,9 +18,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: 'Checkout source'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: 'Install Nix Flakes'
-        uses: cachix/install-nix-action@v25
+        uses: cachix/install-nix-action@v31
       - name: 'Build default package'
         run: nix build -L .
 
@@ -34,8 +34,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: 'Checkout source'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: 'Install Nix Flakes'
-        uses: cachix/install-nix-action@v25
+        uses: cachix/install-nix-action@v31
       - name: 'Run all checks'
         run: nix flake check -L .
