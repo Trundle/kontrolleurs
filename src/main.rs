@@ -15,7 +15,7 @@ use termion::{
     input::TermRead,
     raw::{IntoRawMode, RawTerminal},
 };
-use termwiz::cell::unicode_column_width;
+use unicode_width::UnicodeWidthStr;
 
 use terminal_size::terminal_size;
 
@@ -182,8 +182,7 @@ impl<I: Iterator<Item = String>, W: Write + AsFd> Prompt<I, W> {
         let new_size = terminal_size(&self.stdout.as_fd()).unwrap();
         if new_size.0 != self.terminal_size.0 {
             let prompt = self.prompt();
-            self.current_input_height =
-                unicode_column_width(&prompt, None).div_ceil(new_size.0.into());
+            self.current_input_height = prompt.width().div_ceil(new_size.0.into());
         }
         self.terminal_size = new_size;
     }
@@ -199,18 +198,15 @@ impl<I: Iterator<Item = String>, W: Write + AsFd> Prompt<I, W> {
         self.clear();
         let prompt = self.prompt();
         let _ = write!(self.stdout, "{prompt}");
-        self.current_input_height =
-            unicode_column_width(&prompt, None).div_ceil(self.terminal_size.0.into());
+        self.current_input_height = prompt.width().div_ceil(self.terminal_size.0.into());
         if let Some(ref entry) = self.current_entry {
             let highlight = self.input_to_regex();
             let mut entry_height = 0;
             for line in entry.lines() {
                 Self::print_line(line, &highlight, &mut self.stdout);
-                entry_height +=
-                    unicode_column_width(line, None).div_ceil(self.terminal_size.0.into());
+                entry_height += line.width().div_ceil(self.terminal_size.0.into());
             }
-            let cursor_col: usize =
-                unicode_column_width(&prompt, None) % self.terminal_size.0 as usize;
+            let cursor_col: usize = prompt.width() % self.terminal_size.0 as usize;
             let _ = write!(
                 self.stdout,
                 "{}\r{}",

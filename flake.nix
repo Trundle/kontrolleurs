@@ -51,12 +51,7 @@
                     ];
                 };
               };
-              cargoLock = {
-                lockFile = ./Cargo.lock;
-                outputHashes = {
-                  "filedescriptor-0.8.3" = "sha256-8j7044lN0w/uVQOvqq/GlDGATmI3zAk/GTndJEyb3Ws=";
-                };
-              };
+              cargoLock.lockFile = ./Cargo.lock;
 
               buildInputs = lib.optionals pkgs.stdenv.isDarwin [
                 pkgs.libiconv
