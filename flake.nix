@@ -53,7 +53,7 @@
               };
               cargoLock.lockFile = ./Cargo.lock;
 
-              buildInputs = lib.optionals pkgs.stdenv.isDarwin [
+              buildInputs = lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
                 pkgs.libiconv
               ];
 
